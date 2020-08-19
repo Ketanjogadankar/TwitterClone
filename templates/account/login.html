@@ -1,0 +1,78 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load account socialaccount %}
+{% load crispy_forms_tags %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+
+
+<main>
+  <div class="container">
+
+    <!--Section: Products v.3-->
+    <section class="mb-4">
+      
+      <!--Grid row-->
+      <div class="row wow fadeIn">
+        
+        <div class="col-6 offset-3">
+          <div class="text-center"><i class="fab fa-twitter fa-fw blue-text fa-3x mx-0"></i> </div>
+          <h3 class="text-center font-weight-bold mt-4">{% trans "Log in to Twitter" %}</h1>
+
+          {% get_providers as socialaccount_providers %}
+
+          {% if socialaccount_providers %}
+          <p>{% blocktrans with site.name as site_name %}Please sign in with one
+          of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
+          for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
+
+          <div class="socialaccount_ballot">
+
+            <ul class="socialaccount_providers">
+              {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+            </ul>
+
+            <div class="login-or">{% trans 'or' %}</div>
+
+          </div>
+
+          {% include "socialaccount/snippets/login_extra.html" %}
+
+          {% endif %}
+
+          <form class="login" method="POST" action="{% url 'account_login' %}">
+            {% csrf_token %}
+            
+            {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" id="abcd"/>
+             {% endif %}
+             <div class="md-form md-bg">
+              <input type="text" id="id_login" class="form-control">
+              <label for="id_login" class="requiredField">Phone, email, or Username</label>
+            </div>
+            <div class="md-form md-bg">
+              <input type="password" id="id_password" class="form-control">
+              <label for="id_password">Password</label>
+            </div>
+            
+              <!-- <a class="btn btn-default" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a> -->
+              <button class="btn btn-light-blue btn-rounded btn-block waves-effect" type="submit">{% trans "Sign In" %}</button>
+
+            <div>
+              <p class="text-center mt-4">{% blocktrans %}<a href="{{ paasword_reset }}">Forgot password?</a> . <a href ="{{ signup_url }}"> Sign up for Twitter</a>
+                {% endblocktrans %}</p>
+           
+            </div>
+            
+          </form>
+
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+{% endblock %}
